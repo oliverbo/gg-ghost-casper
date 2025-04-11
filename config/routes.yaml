@@ -1,0 +1,13 @@
+collections:
+  /:
+    permalink: /music/{slug}/
+    template: index
+    filter: tag:music
+  /newsletter/:
+    permalink: /newsletter/{slug}/
+    template: index
+    filter: tag:newsletter
+
+taxonomies:
+  tag: /tag/{slug}/
+  author: /author/{slug}/
