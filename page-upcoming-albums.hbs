@@ -58,13 +58,23 @@ into the {body} tag of the default.hbs template --}}
         %>
     <div class="gg-upcoming-album-item">
         <div class="gg-upcoming-album-album-cover">
+            <% if (album._complete) { %>
             <a href="<%= `/album/${album.slug}` %>">
             <img src="<%= album.coverUrl %>" alt="<%= album.name %> cover" />
             </a>
+            <% } else { 
+                const coverUrl = album.coverUrl 
+                || 'https://storage.googleapis.com/glamglare-img/static/generic-album-cover.png'; %>
+            <img src="<%= coverUrl %>" alt="<%= album.name %> cover" />
+            <% } %>
         </div>
         <div class="gg-upcoming-album-album-details">
             <h2 class="gg-upcoming-album-album-name">
+                <% if (album._complete) { %>
                 <a href="<%= `/album/${album.slug}` %>"><%= album.name %></a>
+                <% } else { %>
+                <%= album.name %>
+                <% } %>
             </h2>
             <p class="gg-upcoming-album-artist-name"><b><%= album.artist %></b></p>
             <p class="gg-upcoming-album-release-date">Release Date: <%= releaseDate %></p>

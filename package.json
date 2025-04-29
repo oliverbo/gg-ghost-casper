@@ -2,7 +2,7 @@
   "name": "glamglare-theme",
   "description": "Modified theme for glamglare",
   "demo": "https://glamglare.com",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "engines": {
     "ghost": ">=5.0.0"
   },
