@@ -2,7 +2,7 @@ collections:
   /:
     permalink: /music/{slug}/
     template: index
-    filter: tag:music
+    filter: tag:[newsletter,music]
   /newsletter/:
     permalink: /newsletter/{slug}/
     template: index
