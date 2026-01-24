@@ -77,3 +77,19 @@
         transform: rotate(360deg);
     }
 }
+
+/* Custom font for site name when header is hidden */
+.gh-head.is-header-hidden .gh-head-logo.no-image {
+    font-family:  "Lora", serif;
+    font-optical-sizing: auto;
+    font-weight: 500;
+    font-style: normal;
+    letter-spacing: 0.06em;
+}
+
+/* Optional: Add different styling for mobile when header is hidden */
+@media (max-width: 767px) {
+    .gh-head.is-header-hidden .gh-head-logo.no-image {
+        font-size: 2.8rem;
+    }
+}
