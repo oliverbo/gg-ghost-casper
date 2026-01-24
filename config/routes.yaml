@@ -7,6 +7,10 @@ collections:
     permalink: /newsletter/{slug}/
     template: index
     filter: tag:newsletter
+  /album-new/:
+    permalink: /album-new/{slug}/
+    template: index
+    filter: tag:album
 
 taxonomies:
   tag: /tag/{slug}/
