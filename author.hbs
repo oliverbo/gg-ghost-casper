@@ -21,6 +21,8 @@
                     sizes="(max-width: 1000px) 400px, 800px"
                     src="{{img_url cover_image size="m"}}"
                     alt="{{title}}"
+                    fetchpriority="high"
+                    loading="eager"
                 />
             </div>
             {{/if}}
@@ -29,7 +31,7 @@
             <div class="post-card-content-link">
 
                 {{#if profile_image}}
-                    <img class="author-profile-pic" src="{{profile_image}}" alt="{{name}}" />
+                    <img class="author-profile-pic" src="{{profile_image}}" alt="{{name}}" loading="eager" />
                 {{/if}}
 
                 <header class="post-card-header">
@@ -49,10 +51,31 @@
                             <a class="author-profile-social-link" href="{{website}}" target="_blank" rel="noopener">{{website}}</a>
                         {{/if}}
                         {{#if twitter}}
-                            <a class="author-profile-social-link" href="{{twitter_url}}" target="_blank" rel="noopener">{{> "icons/twitter"}}</a>
+                            <a class="author-profile-social-link" href="{{social_url type="twitter"}}" target="_blank" rel="noopener">{{> "icons/x"}}</a>
                         {{/if}}
                         {{#if facebook}}
-                            <a class="author-profile-social-link" href="{{facebook_url}}" target="_blank" rel="noopener">{{> "icons/facebook"}}</a>
+                            <a class="author-profile-social-link" href="{{social_url type="facebook"}}" target="_blank" rel="noopener">{{> "icons/facebook"}}</a>
+                        {{/if}}
+                        {{#if linkedin}}
+                            <a class="author-profile-social-link" href="{{social_url type="linkedin"}}" target="_blank" rel="noopener">{{> "icons/linkedin"}}</a>
+                        {{/if}}
+                        {{#if bluesky}}
+                            <a class="author-profile-social-link" href="{{social_url type="bluesky"}}" target="_blank" rel="noopener">{{> "icons/bluesky"}}</a>
+                        {{/if}}
+                        {{#if threads}}
+                            <a class="author-profile-social-link" href="{{social_url type="threads"}}" target="_blank" rel="noopener">{{> "icons/threads"}}</a>
+                        {{/if}}
+                        {{#if mastodon}}
+                            <a class="author-profile-social-link" href="{{social_url type="mastodon"}}" target="_blank" rel="noopener">{{> "icons/mastodon"}}</a>
+                        {{/if}}
+                        {{#if tiktok}}
+                            <a class="author-profile-social-link" href="{{social_url type="tiktok"}}" target="_blank" rel="noopener">{{> "icons/tiktok"}}</a>
+                        {{/if}}
+                        {{#if youtube}}
+                            <a class="author-profile-social-link" href="{{social_url type="youtube"}}" target="_blank" rel="noopener">{{> "icons/youtube"}}</a>
+                        {{/if}}
+                        {{#if instagram}}
+                            <a class="author-profile-social-link" href="{{social_url type="instagram"}}" target="_blank" rel="noopener">{{> "icons/instagram"}}</a>
                         {{/if}}
                     </div>
                 </footer>
@@ -71,6 +94,6 @@
     </div>
 
     {{pagination}}
-    
+
 </div>
 </main>
