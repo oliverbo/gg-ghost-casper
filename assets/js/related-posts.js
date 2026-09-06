@@ -12,6 +12,7 @@
     const DEFAULT_API_ORIGIN = 'https://glamglare-204017.appspot.com';
     const MAX_POSTS = 3;
     const REQUEST_TIMEOUT = 5000;
+    const DEPRIORITIZED_TAG = 'song-pick-of-the-day';
     const POST_HOSTS = new Set(['glamglare.com', 'www.glamglare.com']);
     const LOCAL_POST_HOSTS = new Set(['localhost', '127.0.0.1']);
 
@@ -60,6 +61,12 @@
         return Number.isNaN(parsed) ? 0 : parsed;
     }
 
+    function hasTag(post, tag) {
+        return Array.isArray(post.tags) && post.tags.some(function (postTag) {
+            return typeof postTag === 'string' && postTag.trim().toLowerCase() === tag;
+        });
+    }
+
     function normalizePosts(posts, currentPostUrl) {
         if (!Array.isArray(posts)) return [];
 
@@ -85,6 +92,9 @@
 
         return normalized
             .sort(function (first, second) {
+                const priorityDifference = Number(hasTag(first, DEPRIORITIZED_TAG)) - Number(hasTag(second, DEPRIORITIZED_TAG));
+                if (priorityDifference !== 0) return priorityDifference;
+
                 return timestamp(second.postDate) - timestamp(first.postDate);
             })
             .slice(0, MAX_POSTS);
@@ -211,6 +221,7 @@
     return {
         apiOrigin: apiOrigin,
         currentPostUrl: currentPostUrl,
+        hasTag: hasTag,
         init: init,
         normalizePosts: normalizePosts,
         parseCurrentPostUrl: parseCurrentPostUrl,
