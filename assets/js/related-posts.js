@@ -155,8 +155,15 @@
         return card;
     }
 
+    function currentPostUrl(sourceDocument) {
+        if (!sourceDocument) return null;
+
+        const article = sourceDocument.querySelector('[data-current-post-url]');
+        return article ? article.dataset.currentPostUrl : null;
+    }
+
     async function load(container) {
-        const postUrl = container.dataset.postUrl;
+        const postUrl = currentPostUrl(document);
         if (!parseCurrentPostUrl(postUrl)) return;
 
         const feed = container.querySelector('.read-more');
@@ -203,6 +210,7 @@
 
     return {
         apiOrigin: apiOrigin,
+        currentPostUrl: currentPostUrl,
         init: init,
         normalizePosts: normalizePosts,
         parseCurrentPostUrl: parseCurrentPostUrl,

@@ -3,6 +3,7 @@ const assert = require('node:assert/strict');
 
 const {
     apiOrigin,
+    currentPostUrl: readCurrentPostUrl,
     normalizePosts,
     parseCurrentPostUrl,
     parseUrl
@@ -41,6 +42,18 @@ test('accepts local URLs only for identifying the current post', () => {
     assert.equal(parseCurrentPostUrl('http://127.0.0.1:2369/music/current-post/').hostname, '127.0.0.1');
     assert.equal(parseCurrentPostUrl('http://www.glamglare.com/music/current-post/'), null);
     assert.equal(parseCurrentPostUrl('http://example.com/music/current-post/'), null);
+});
+
+test('reads the current post URL from the article post context', () => {
+    const sourceDocument = {
+        querySelector: () => ({
+            dataset: {currentPostUrl: 'http://localhost:2369/music/current-post/'}
+        })
+    };
+
+    assert.equal(readCurrentPostUrl(sourceDocument), 'http://localhost:2369/music/current-post/');
+    assert.equal(readCurrentPostUrl({querySelector: () => null}), null);
+    assert.equal(readCurrentPostUrl(null), null);
 });
 
 test('filters, deduplicates, sorts, and limits related posts', () => {

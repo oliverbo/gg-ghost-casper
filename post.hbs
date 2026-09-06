@@ -8,7 +8,10 @@ into the {body} tag of the default.hbs template --}}
 {{!-- Everything inside the #post block pulls data from the post --}}
 
 <main id="site-main" class="site-main">
-<article class="article {{post_class}} {{#match @custom.post_image_style "Full"}}image-full{{else match @custom.post_image_style "=" "Small"}}image-small{{/match}}">
+<article
+    class="article {{post_class}} {{#match @custom.post_image_style "Full"}}image-full{{else match @custom.post_image_style "=" "Small"}}image-small{{/match}}"
+    data-current-post-url="{{url absolute="true"}}"
+>
 
     <header class="article-header gh-canvas">
 
@@ -130,7 +133,6 @@ into the {body} tag of the default.hbs template --}}
         <aside
             class="read-more-wrap outer"
             data-related-posts
-            data-post-url="{{url absolute="true"}}"
             {{#unless more_posts}}hidden{{/unless}}
         >
             <div class="read-more inner">
