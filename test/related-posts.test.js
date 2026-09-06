@@ -1,7 +1,12 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 
-const {normalizePosts, parseUrl} = require('../assets/js/related-posts');
+const {
+    apiOrigin,
+    normalizePosts,
+    parseCurrentPostUrl,
+    parseUrl
+} = require('../assets/js/related-posts');
 
 const currentUrl = 'https://www.glamglare.com/music/current-post/';
 
@@ -23,6 +28,19 @@ test('accepts only HTTPS URLs on an allowed host', () => {
     assert.equal(parseUrl('http://www.glamglare.com/music/post/', hosts), null);
     assert.equal(parseUrl('https://example.com/music/post/', hosts), null);
     assert.equal(parseUrl('not a URL', hosts), null);
+});
+
+test('uses a valid injected backend URL with a production fallback', () => {
+    assert.equal(apiOrigin('https://glamglare-dev.uc.r.appspot.com/path'), 'https://glamglare-dev.uc.r.appspot.com');
+    assert.equal(apiOrigin('http://insecure.example.com'), 'https://glamglare-204017.appspot.com');
+    assert.equal(apiOrigin(undefined), 'https://glamglare-204017.appspot.com');
+});
+
+test('accepts local URLs only for identifying the current post', () => {
+    assert.equal(parseCurrentPostUrl('http://localhost:2369/music/current-post/').hostname, 'localhost');
+    assert.equal(parseCurrentPostUrl('http://127.0.0.1:2369/music/current-post/').hostname, '127.0.0.1');
+    assert.equal(parseCurrentPostUrl('http://www.glamglare.com/music/current-post/'), null);
+    assert.equal(parseCurrentPostUrl('http://example.com/music/current-post/'), null);
 });
 
 test('filters, deduplicates, sorts, and limits related posts', () => {
@@ -47,4 +65,10 @@ test('filters, deduplicates, sorts, and limits related posts', () => {
 test('leaves invalid API results empty', () => {
     assert.deepEqual(normalizePosts(null, currentUrl), []);
     assert.deepEqual(normalizePosts({}, currentUrl), []);
+});
+
+test('excludes the local current post when the API returns its production URL', () => {
+    const posts = [post({postUrl: 'https://www.glamglare.com/music/current-post/'})];
+
+    assert.deepEqual(normalizePosts(posts, 'http://localhost:2369/music/current-post/'), []);
 });

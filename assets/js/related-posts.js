@@ -9,10 +9,11 @@
         relatedPosts.init();
     }
 })(typeof window !== 'undefined' ? window : undefined, function (window, document) {
-    const API_ORIGIN = 'https://glamglare-204017.appspot.com';
+    const DEFAULT_API_ORIGIN = 'https://glamglare-204017.appspot.com';
     const MAX_POSTS = 3;
     const REQUEST_TIMEOUT = 5000;
     const POST_HOSTS = new Set(['glamglare.com', 'www.glamglare.com']);
+    const LOCAL_POST_HOSTS = new Set(['localhost', '127.0.0.1']);
 
     function parseUrl(value, allowedHosts) {
         if (typeof value !== 'string') return null;
@@ -32,6 +33,28 @@
         return url.pathname.replace(/\/$/, '');
     }
 
+    function parseCurrentPostUrl(value) {
+        const productionUrl = parseUrl(value, POST_HOSTS);
+        if (productionUrl) return productionUrl;
+
+        if (typeof value !== 'string') return null;
+
+        try {
+            const url = new URL(value);
+            if (!LOCAL_POST_HOSTS.has(url.hostname) || (url.protocol !== 'http:' && url.protocol !== 'https:')) {
+                return null;
+            }
+            return url;
+        } catch (error) {
+            return null;
+        }
+    }
+
+    function apiOrigin(value) {
+        const configuredUrl = parseUrl(value);
+        return configuredUrl ? configuredUrl.origin : DEFAULT_API_ORIGIN;
+    }
+
     function timestamp(value) {
         const parsed = Date.parse(value);
         return Number.isNaN(parsed) ? 0 : parsed;
@@ -40,7 +63,7 @@
     function normalizePosts(posts, currentPostUrl) {
         if (!Array.isArray(posts)) return [];
 
-        const currentUrl = parseUrl(currentPostUrl, POST_HOSTS);
+        const currentUrl = parseCurrentPostUrl(currentPostUrl);
         const currentKey = currentUrl ? postKey(currentUrl) : null;
         const seen = new Set();
         const normalized = [];
@@ -134,12 +157,12 @@
 
     async function load(container) {
         const postUrl = container.dataset.postUrl;
-        if (!parseUrl(postUrl, POST_HOSTS)) return;
+        if (!parseCurrentPostUrl(postUrl)) return;
 
         const feed = container.querySelector('.read-more');
         if (!feed) return;
 
-        const endpoint = new URL('/public/posts/related', API_ORIGIN);
+        const endpoint = new URL('/public/posts/related', apiOrigin(window.__BACKEND_URL__));
         endpoint.searchParams.set('postUrl', postUrl);
 
         const controller = new AbortController();
@@ -179,8 +202,10 @@
     }
 
     return {
+        apiOrigin: apiOrigin,
         init: init,
         normalizePosts: normalizePosts,
+        parseCurrentPostUrl: parseCurrentPostUrl,
         parseUrl: parseUrl
     };
 });
