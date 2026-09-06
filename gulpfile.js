@@ -83,6 +83,7 @@ function zipper(done) {
             '**',
             '!node_modules', '!node_modules/**',
             '!dist', '!dist/**',
+            '!test', '!test/**',
             '!pnpm-debug.log',
             '!pnpm-lock.yaml',
             '!pnpm-workspace.yaml',

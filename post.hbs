@@ -8,7 +8,10 @@ into the {body} tag of the default.hbs template --}}
 {{!-- Everything inside the #post block pulls data from the post --}}
 
 <main id="site-main" class="site-main">
-<article class="article {{post_class}} {{#match @custom.post_image_style "Full"}}image-full{{else match @custom.post_image_style "=" "Small"}}image-small{{/match}}">
+<article
+    class="article {{post_class}} {{#match @custom.post_image_style "Full"}}image-full{{else match @custom.post_image_style "=" "Small"}}image-small{{/match}}"
+    data-current-post-url="{{url absolute="true"}}"
+>
 
     <header class="article-header gh-canvas">
 
@@ -127,15 +130,17 @@ into the {body} tag of the default.hbs template --}}
     exclude the post we're currently on from being included. --}}
     {{#get "posts" filter="id:-{{id}}" limit="3" as |more_posts|}}
 
-        {{#if more_posts}}
-            <aside class="read-more-wrap outer">
-                <div class="read-more inner">
-                    {{#foreach more_posts}}
-                        {{> "post-card"}}
-                    {{/foreach}}
-                </div>
-            </aside>
-        {{/if}}
+        <aside
+            class="read-more-wrap outer"
+            data-related-posts
+            {{#unless more_posts}}hidden{{/unless}}
+        >
+            <div class="read-more inner">
+                {{#foreach more_posts}}
+                    {{> "post-card"}}
+                {{/foreach}}
+            </div>
+        </aside>
 
     {{/get}}
 {{/if}}
